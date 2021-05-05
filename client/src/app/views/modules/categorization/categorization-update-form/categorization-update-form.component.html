@@ -1,0 +1,88 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change categorization details"></app-no-privilege>
+<div *ngIf="this.categorization && privilege.update">
+  <app-page-header
+    title="Categorization Change Form of {{ categorization.code }}"
+    [breadcrumbSegments]="['Categorizations', 'Show All Categorizations', 'Change Details of ' + categorization.code]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Start date </mat-label>
+                <input type="datetime-local" matInput formControlName="tostart" >
+                <mat-hint>Ex: 2020-12-31</mat-hint>
+                <mat-error *ngIf="tostartField.invalid">
+                  <span *ngIf="tostartField.errors.server">{{tostartField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>End date </mat-label>
+                <input type="datetime-local" matInput formControlName="toend" >
+                <mat-hint>Ex: 2020-12-31</mat-hint>
+                <mat-error *ngIf="toendField.invalid">
+                  <span *ngIf="toendField.errors.server">{{toendField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Categorization</mat-label>
+            <mat-select formControlName="categorizationstatus" >
+              <mat-option *ngFor="let categorizationstatus of categorizationstatuses" [value]="categorizationstatus.id">{{categorizationstatus.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="categorizationstatusField.invalid">
+              <span *ngIf="categorizationstatusField.errors.server">{{categorizationstatusField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Employees</mat-label>
+            <app-dual-listbox [min]="1"  placeholder="Add Employees To Here" [sourceData]="employees" formControlName="employees"></app-dual-listbox>
+            <mat-error *ngIf="employeesField.invalid">
+              <span *ngIf="employeesField.errors.min">Select at lease 1 Employees</span>
+              <span *ngIf="employeesField.errors.server">{{employeesField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Collections</mat-label>
+            <app-dual-listbox [min]="1"  placeholder="Add Collections To Here" [sourceData]="collections" formControlName="collections"></app-dual-listbox>
+            <mat-error *ngIf="collectionsField.invalid">
+              <span *ngIf="collectionsField.errors.min">Select at lease 1 Collections</span>
+              <span *ngIf="collectionsField.errors.server">{{collectionsField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/categorizations" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Categorizations</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

@@ -1,0 +1,85 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change material details"></app-no-privilege>
+<div *ngIf="this.material && privilege.update">
+  <app-page-header
+    title="Material Change Form of {{ material.code }}"
+    [breadcrumbSegments]="['Materials', 'Show All Materials', 'Change Details of ' + material.code]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Leaf Type</mat-label>
+                <mat-select formControlName="tealeaftype" >
+                  <mat-option *ngFor="let tealeaftype of tealeaftypes" [value]="tealeaftype.id">{{tealeaftype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="tealeaftypeField.invalid">
+                  <span *ngIf="tealeaftypeField.errors.server">{{tealeaftypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tree Type</mat-label>
+                <mat-select formControlName="teatreetype" >
+                  <mat-option *ngFor="let teatreetype of teatreetypes" [value]="teatreetype.id">{{teatreetype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="teatreetypeField.invalid">
+                  <span *ngIf="teatreetypeField.errors.server">{{teatreetypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Unit Price</mat-label>
+                <input type="number" matInput formControlName="unitprice" >
+                <mat-hint>Ex: Rs 20</mat-hint>
+                <mat-error *ngIf="unitpriceField.invalid">
+                  <span *ngIf="unitpriceField.errors.server">{{unitpriceField.errors.server.join(', ')}}</span>
+                  <span *ngIf="unitpriceField.errors.min">Unit Price should be equal or greater than 1</span>
+                  <span *ngIf="unitpriceField.errors.max">Unit Price should be equal or less than 1000</span>
+                  <span *ngIf="unitpriceField.errors.pattern">Unit Price is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Material Status</mat-label>
+                <mat-select formControlName="materialstatus" >
+                  <mat-option *ngFor="let materialstatus of materialstatuses" [value]="materialstatus.id">{{materialstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="materialstatusField.invalid">
+                  <span *ngIf="materialstatusField.errors.server">{{materialstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/materials" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Materials</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

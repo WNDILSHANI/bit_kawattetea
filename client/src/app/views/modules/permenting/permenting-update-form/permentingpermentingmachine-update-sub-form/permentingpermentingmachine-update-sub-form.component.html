@@ -1,0 +1,80 @@
+<div class="sub-form">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="sub-form-table-container" style="height: 240px;">
+        <div *ngIf="dataList.length === 0" class="sub-form-table-placeholder" style="padding-top: 90px">No permenting machings to show</div>
+        <div *ngIf="dataList.length > 0" >
+
+          <table class="w-100 mat-table">
+            <thead>
+              <tr>
+                <th>Permenting Machine</th>
+                <th>Init weight</th>
+                <th>Final weight</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dataItem of dataList; let i = index">
+              <td>{{dataItem.permentingmachine.name}}</td>
+              <td>{{dataItem.initweight | currency :'Rs.'}}</td>
+              <td>{{dataItem.finalweight | currency :'Rs.'}}</td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="removeData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="warn">
+                  <mat-icon>delete</mat-icon> Delete
+                </button>
+              </td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="updateData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="accent">
+                  <mat-icon>edit</mat-icon> Change
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <form [formGroup]="form" (ngSubmit)="addData()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Permenting Machine</mat-label>
+          <mat-select (click)="setValidations()" formControlName="permentingmachine" [required]="hasValidations">
+            <mat-option *ngFor="let permentingmachine of permentingmachines" [value]="permentingmachine.id">{{permentingmachine.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="permentingmachineField.invalid">
+            <span *ngIf="permentingmachineField.errors.required">Select at lease one permenting machine</span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Init weight</mat-label>
+          <input (focus)="setValidations()" type="number" matInput formControlName="initweight" [required]="hasValidations">
+          <mat-hint>Ex: </mat-hint>
+          <mat-error *ngIf="initweightField.invalid">
+            <span *ngIf="initweightField.errors.required">Init weight is required</span>
+            <span *ngIf="initweightField.errors.min">Init weight should be equal or greater than 0. </span>
+            <span *ngIf="initweightField.errors.max">Init weight should be equal or less than 9999999. </span>
+            <span *ngIf="initweightField.errors.pattern">Init weight is invalid.</span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Final weight</mat-label>
+          <input (focus)="setValidations()" type="number" matInput formControlName="finalweight" >
+          <mat-hint>Ex: </mat-hint>
+          <mat-error *ngIf="finalweightField.invalid">
+            <span *ngIf="finalweightField.errors.min">Final weight should be equal or greater than 0. </span>
+            <span *ngIf="finalweightField.errors.max">Final weight should be equal or less than 9999999. </span>
+            <span *ngIf="finalweightField.errors.pattern">Final weight is invalid.</span>
+          </mat-error>
+        </mat-form-field>
+        <div class="text-right mt-5 d-flex">
+          <span class="spacer"></span>
+          <button [disabled]="disabled" (click)="resetForm()" class="mat-btn-sm" mat-stroked-button type="button"><mat-icon>refresh</mat-icon> Clear </button>
+          <button [disabled]="disabled" (click)="setValidations()" class="mr-0 mat-btn-sm" mat-flat-button color="accent" type="submit"><mat-icon>save</mat-icon> ADD </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

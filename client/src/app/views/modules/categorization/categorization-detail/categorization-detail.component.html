@@ -1,0 +1,78 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a categorization"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !categorization" message="Categorization Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="categorization && privilege.showOne">
+  <app-page-header
+    title="Categorization Detail Page of {{ categorization.code }}"
+    [breadcrumbSegments]="['Categorizations', 'Show All Categorizations', 'Details of ' + categorization.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{categorization.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{categorization.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(categorization.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{categorization.code}}</td>
+              </tr>
+              <tr *ngIf="categorization.tostart">
+                <th>Start date </th>
+                <td>{{categorization.tostart | date: 'medium'}}</td>
+              </tr>
+              <tr *ngIf="categorization.toend">
+                <th>End date </th>
+                <td>{{categorization.toend | date: 'medium'}}</td>
+              </tr>
+              <tr *ngIf="categorization.categorizationstatus">
+                <th>categorization</th>
+                <td>{{categorization.categorizationstatus.name}}</td>
+              </tr>
+              <tr>
+                <th>Employees</th>
+                <td><span class="mat-body badge badge-secondary d-inline-block mr-2 mb-2 font-weight-light py-1 px-3" *ngFor="let employee of categorization.employeeList">{{employee.code}}</span></td>
+              </tr>
+              <tr>
+                <th>Collections</th>
+                <td><span class="mat-body badge badge-secondary d-inline-block mr-2 mb-2 font-weight-light py-1 px-3" *ngFor="let collection of categorization.collectionList">{{collection.code}}</span></td>
+              </tr>
+              <tr *ngIf="categorization.description">
+                <th>Description</th>
+                <td [innerHTML]="categorization.description | nl2br"></td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/categorizations/edit/{{categorization.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/categorizations/add" mat-stroked-button><mat-icon>add</mat-icon> New Categorization</button>
+    <button *ngIf="privilege.showAll" routerLink="/categorizations" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Categorizations</button>
+  </div>
+</div>

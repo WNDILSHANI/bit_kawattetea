@@ -1,0 +1,96 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a packing"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !packing" message="Packing Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="packing && privilege.showOne">
+  <app-page-header
+    title="Packing Detail Page of {{ packing.code }}"
+    [breadcrumbSegments]="['Packings', 'Show All Packings', 'Details of ' + packing.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{packing.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{packing.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(packing.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{packing.code}}</td>
+              </tr>
+              <tr *ngIf="packing.tostart">
+                <th>Start date </th>
+                <td>{{packing.tostart | date: 'medium'}}</td>
+              </tr>
+              <tr *ngIf="packing.toend">
+                <th>End date </th>
+                <td>{{packing.toend | date: 'medium'}}</td>
+              </tr>
+              <tr>
+                <th>Employees</th>
+                <td><span class="mat-body badge badge-secondary d-inline-block mr-2 mb-2 font-weight-light py-1 px-3" *ngFor="let employee of packing.employeeList">{{employee.code}}</span></td>
+              </tr>
+              <tr *ngIf="packing.packingstatus">
+                <th>Packing Status</th>
+                <td>{{packing.packingstatus.name}}</td>
+              </tr>
+              <tr>
+                <th>Product Order</th>
+                <td>{{packing.porder.name}}</td>
+              </tr>
+              <tr *ngIf="packing.description">
+                <th>Description</th>
+                <td [innerHTML]="packing.description | nl2br"></td>
+              </tr>
+                  <tr>
+                    <td colspan="2">
+                      <table class="w-100 custom-data-table">
+                        <thead>
+                          <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let packingproduct of packing.packingproductList">
+                            <td>{{packingproduct.product}}</td>
+                            <td>{{packingproduct.qty}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/packings/edit/{{packing.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/packings/add" mat-stroked-button><mat-icon>add</mat-icon> New Packing</button>
+    <button *ngIf="privilege.showAll" routerLink="/packings" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Packings</button>
+  </div>
+</div>

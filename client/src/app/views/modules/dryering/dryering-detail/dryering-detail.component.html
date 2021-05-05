@@ -1,0 +1,106 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a dryering"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !dryering" message="Dryering Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="dryering && privilege.showOne">
+  <app-page-header
+    title="Dryering Detail Page of {{ dryering.code }}"
+    [breadcrumbSegments]="['Dryerings', 'Show All Dryerings', 'Details of ' + dryering.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{dryering.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{dryering.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(dryering.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{dryering.code}}</td>
+              </tr>
+              <tr *ngIf="dryering.tostart">
+                <th>Start date </th>
+                <td>{{dryering.tostart | date: 'medium'}}</td>
+              </tr>
+              <tr *ngIf="dryering.toend">
+                <th>End date </th>
+                <td>{{dryering.toend | date: 'medium'}}</td>
+              </tr>
+              <tr>
+                <th>Employees</th>
+                <td><span class="mat-body badge badge-secondary d-inline-block mr-2 mb-2 font-weight-light py-1 px-3" *ngFor="let employee of dryering.employeeList">{{employee.code}}</span></td>
+              </tr>
+              <tr *ngIf="dryering.initweight">
+                <th>Init weight</th>
+                <td>{{dryering.initweight | currency: 'Rs.'}}</td>
+              </tr>
+              <tr *ngIf="dryering.finalweight">
+                <th>Final weight</th>
+                <td>{{dryering.finalweight | currency: 'Rs.'}}</td>
+              </tr>
+              <tr *ngIf="dryering.dryeringstatus">
+                <th>Dryering Status</th>
+                <td>{{dryering.dryeringstatus.name}}</td>
+              </tr>
+              <tr *ngIf="dryering.categorizedmaterial">
+                <th>Categorized Material</th>
+                <td>{{dryering.categorizedmaterial.name}}</td>
+              </tr>
+              <tr *ngIf="dryering.description">
+                <th>Description</th>
+                <td [innerHTML]="dryering.description | nl2br"></td>
+              </tr>
+                  <tr>
+                    <td colspan="2">
+                      <table class="w-100 custom-data-table">
+                        <thead>
+                          <tr>
+                            <th>Dryeringline</th>
+                            <th>Init Weight</th>
+                            <th>Final Weight</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let dryeringdryeringline of dryering.dryeringdryeringlineList">
+                            <td>{{dryeringdryeringline.dryeringline}}</td>
+                            <td>{{dryeringdryeringline.initweight}}</td>
+                            <td>{{dryeringdryeringline.finalweight}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/dryerings/edit/{{dryering.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/dryerings/add" mat-stroked-button><mat-icon>add</mat-icon> New Dryering</button>
+    <button *ngIf="privilege.showAll" routerLink="/dryerings" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Dryerings</button>
+  </div>
+</div>
